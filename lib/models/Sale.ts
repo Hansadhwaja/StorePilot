@@ -9,7 +9,7 @@ export interface ISale extends Document {
     saleDate: Date;
 }
 
-const SaleSchema = new Schema<ISale>({
+const saleSchema = new Schema<ISale>({
     product: {
         type: Schema.Types.ObjectId,
         ref: 'Product',
@@ -36,4 +36,7 @@ const SaleSchema = new Schema<ISale>({
     }
 });
 
-export const Sale = models.Sale || model<ISale>('Sale', SaleSchema);
+export const Sale = models.Sale || model<ISale>('Sale', saleSchema);
+
+
+
