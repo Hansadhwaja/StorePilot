@@ -4,6 +4,7 @@ import React from "react";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -28,9 +29,9 @@ export default async function ProductTable() {
   );
 
   return (
-    <div className="overflow-x-auto">
-      <Table className="w-full text-sm border h-96">
-        <TableHeader className="bg-gray-100">
+    <div className="w-full overflow-x-auto border rounded-md">
+      <Table className="min-w-[900px] text-sm">
+        <TableHeader className="sticky top-0 bg-muted z-10">
           <TableRow>
             <TableHead className="p-2 text-left">Name</TableHead>
             <TableHead className="p-2 text-left">Unit</TableHead>
@@ -45,11 +46,11 @@ export default async function ProductTable() {
         <TableBody>
           {sortedGroupEntries.map(([groupName, productList]) => (
             <React.Fragment key={groupName}>
-              <tr className="bg-gray-200">
-                <td className="p-2 font-semibold" colSpan={8}>
+              <TableRow className="bg-gray-200/50">
+                <TableCell className="p-2 font-semibold" colSpan={8}>
                   {groupName.charAt(0).toUpperCase() + groupName.slice(1)}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
               {productList.map((p) => (
                 <ProductRow
                   key={p._id.toString()}

@@ -36,7 +36,7 @@ export default function ProductRow({
       <TableCell className="p-2">{product.unit}</TableCell>
       <TableCell className="p-2">₹{product.sellingPrice.toFixed(2)}/-</TableCell>
       <TableCell className="p-2">₹{product.costPrice.toFixed(2)}/-</TableCell>
-      <TableCell className="p-2">₹{product.sellingPrice-product.costPrice}/-</TableCell>
+      <TableCell className="p-2">₹{(product.sellingPrice-product.costPrice).toFixed(2)}/-</TableCell>
       <TableCell className="p-2">{product.stockQty ?? 0}</TableCell>
       <TableCell className="p-2">
         ₹{(product.costPrice * (product.stockQty ?? 0)).toFixed(2)}

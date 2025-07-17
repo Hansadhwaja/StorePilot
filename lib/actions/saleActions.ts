@@ -71,7 +71,7 @@ export async function getSalesSummaryByDate() {
         saleCount: { $sum: 1 },
       },
     },
-    { $sort: { "_id.date": 1 } },
+    { $sort: { "_id.date":-1 } },
   ]);
 
   return sales.map((s) => ({

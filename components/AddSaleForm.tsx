@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useState, useEffect } from "react";
+import React, { useTransition, useState, useEffect } from "react";
 import { addSale } from "@/lib/actions/saleActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,10 +24,14 @@ import { ProductData } from "@/app/api/products/route";
 export default function AddSaleForm() {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState<ProductData[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
+    null
+  );
   const [sellingPrice, setSellingPrice] = useState("");
   const [costPrice, setCostPrice] = useState("");
-  const [saleDate, setSaleDate] = useState(() => new Date().toISOString().split("T")[0]); // today
+  const [saleDate, setSaleDate] = useState(
+    () => new Date().toISOString().split("T")[0]
+  ); // today
 
   const [isPending, startTransition] = useTransition();
 
@@ -62,7 +66,7 @@ export default function AddSaleForm() {
         costPrice: formData.get("costPrice")
           ? Number(formData.get("costPrice"))
           : undefined,
-        saleDate: formData.get("saleDate")?.toString(), // added date field
+        saleDate: formData.get("saleDate")?.toString(),
       };
 
       addSale(saleData)
@@ -93,18 +97,46 @@ export default function AddSaleForm() {
                 <SelectValue placeholder="Select a product" />
               </SelectTrigger>
               <SelectContent>
-                {products.map((product) => (
-                  <SelectItem key={product._id} value={product._id}>
-                    {product.name}
-                  </SelectItem>
-                ))}
+                {Object.entries(
+                  products.reduce((acc, product) => {
+                    const category = product.category || "Others";
+                    if (!acc[category]) acc[category] = [];
+                    acc[category].push(product);
+                    return acc;
+                  }, {} as Record<string, ProductData[]>)
+                )
+                  .sort(([a], [b]) => a.localeCompare(b))
+                  .map(([category, products]) => {
+                    const sortedProducts = [...products].sort((a, b) =>
+                      a.name.localeCompare(b.name)
+                    );
+
+                    return (
+                      <React.Fragment key={category}>
+                        <div className="px-2 py-1 text-muted-foreground text-xs uppercase tracking-wide">
+                          {category}
+                        </div>
+                        {sortedProducts.map((product) => (
+                          <SelectItem key={product._id} value={product._id}>
+                            {product.name}
+                          </SelectItem>
+                        ))}
+                      </React.Fragment>
+                    );
+                  })}
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-1">
             <Label htmlFor="quantity">Quantity</Label>
-            <Input id="quantity" name="quantity" type="number" min={1} required />
+            <Input
+              id="quantity"
+              name="quantity"
+              type="number"
+              min={1}
+              required
+            />
           </div>
 
           <div className="space-y-1">

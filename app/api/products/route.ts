@@ -8,6 +8,7 @@ export interface ProductData {
     name: string;
     sellingPrice: number;
     costPrice: number;
+    category: string;
 }
 
 export async function GET() {
@@ -17,6 +18,7 @@ export async function GET() {
         products.map((p) => ({
             _id: p._id.toString(),
             name: p.name,
+            category:p.category,
             sellingPrice: p.sellingPrice,
             costPrice: p.costPrice,
         }))
