@@ -1,5 +1,6 @@
-import AddProduct from "@/components/AddProduct";
-import ProductTable from "@/components/ProductTable";
+import AddProduct from "@/components/Products/AddProduct";
+import ProductTable from "@/components/Products/ProductTable";
+
 
 export default async function ProductPage() {
   return (

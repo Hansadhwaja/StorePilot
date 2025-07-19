@@ -1,6 +1,6 @@
 import { getSalesSummaryByDate } from "@/lib/actions/saleActions";
-import AddSaleForm from "@/components/AddSaleForm";
 import SummaryTable from "@/components/Sales/SummaryTable";
+import AddSaleForm from "@/components/Sales/AddSaleForm";
 
 export default async function SalesPage() {
   const salesSummary = await getSalesSummaryByDate();

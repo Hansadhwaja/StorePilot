@@ -5,23 +5,9 @@ import { TableRow, TableCell } from "@/components/ui/table";
 import SalesTableRow from "./SalesTableRow";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, ChevronUp } from "lucide-react";
-
-export interface DaySale {
-  productName: string;
-  quantity: number;
-  sellingPrice: number;
-  costPrice?: number;
-  profit?: number;
-}
-
-export interface SalesProps {
-  date: string;
-  sales: DaySale[];
-  totalItems: number;
-  totalRevenue: number;
-  totalProfit: number;
-  initiallyOpen?: boolean;
-}
+import { SalesProps } from "@/types";
+import { deleteSale } from "@/lib/actions/saleActions";
+import { toast } from "sonner";
 
 export default function DaySalesGroup({
   date,
@@ -42,6 +28,20 @@ export default function DaySalesGroup({
             sale={sale}
             index={i}
             date={date}
+            onDelete={async (productName) => {
+              const confirmDelete = confirm(
+                "Are you sure you want to delete this sale?"
+              );
+              if (!confirmDelete) return;
+
+              try {
+                await deleteSale(productName);
+                toast.success("Sale deleted successfully");
+              } catch (err) {
+                console.error("Deletion failed:", err);
+                toast.error("Failed to delete sale");
+              }
+            }}
           />
         ))}
       <TableRow

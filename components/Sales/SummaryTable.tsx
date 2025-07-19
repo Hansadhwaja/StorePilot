@@ -6,7 +6,8 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import DaySalesGroup, { SalesProps } from "./DaySalesGroup";
+import DaySalesGroup from "./DaySalesGroup";
+import { SalesProps } from "@/types";
 
 interface Props {
   salesSummary: SalesProps[];
@@ -28,6 +29,7 @@ export default function SummaryTable({ salesSummary, grandTotals }: Props) {
           <TableHead>Selling Price</TableHead>
           <TableHead>Cost Price</TableHead>
           <TableHead>Profit</TableHead>
+          <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

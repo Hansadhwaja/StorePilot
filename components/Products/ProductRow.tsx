@@ -2,10 +2,11 @@
 
 import { deleteProduct } from "@/lib/actions/productActions";
 import { toast } from "sonner";
-import { Button } from "./ui/button";
 import { Trash2 } from "lucide-react";
 import EditProductDialog from "./EditProductDialog";
-import { TableCell, TableRow } from "./ui/table";
+import { TableCell, TableRow } from "../ui/table";
+import { Button } from "../ui/button";
+
 
 export default function ProductRow({
   product,

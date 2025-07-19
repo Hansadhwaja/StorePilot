@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Loader from "./Loader";
+import Loader from "../Loader";
 
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
