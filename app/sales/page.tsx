@@ -3,17 +3,16 @@ import SummaryTable from "@/components/Sales/SummaryTable";
 import AddSaleForm from "@/components/Sales/AddSaleForm";
 import { SalesHeader } from "@/components/Sales/SalesHeader";
 
-interface SalesPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
-export default async function SalesPage({ searchParams }: SalesPageProps) {
+export default async function SalesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const current = new Date();
+  const month = (await searchParams).month;
 
   const selectedMonth =
-    typeof searchParams.month === "string"
-      ? parseInt(searchParams.month)
-      : current.getMonth();
+    typeof month === "string" ? parseInt(month) : current.getMonth();
 
   const selectedYear = current.getFullYear();
 
