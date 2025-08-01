@@ -19,10 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` w-full h-screen justify-center flex-center overflow-hidden ${inter.className}`}
+        className={` w-full justify-center flex-center ${inter.className}`}
       >
         <Navbar />
-        <main className="px-4 w-full h-full">{children}</main>
+        <main className="px-4 w-full">{children}</main>
         <Toaster />
       </body>
     </html>

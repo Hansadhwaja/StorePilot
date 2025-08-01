@@ -4,8 +4,10 @@ export interface DealerProps {
   phone?: string;
   email?: string;
   address?: string;
-  openingBalance: number;
-  createdAt?: string;
+  totalPurchased: number;
+  totalPaid: number;
+  due: number;
+  status: string;
 };
 
 export interface DealerFormData {
@@ -47,7 +49,7 @@ export interface PopulatedPurchase {
   };
   items: PopulatedItem[];
   totalAmount: number;
-  paidAmount: number;
+  fairAmount: number;
   purchaseDate: Date;
 }
 
@@ -76,4 +78,12 @@ export interface SalesProps {
   totalRevenue: number;
   totalProfit: number;
   initiallyOpen?: boolean;
+}
+
+export interface Payment {
+  _id: string;
+  amount: number;
+  paidAt: string | Date;
+  note?: string;
+  dealerId: string;
 }
