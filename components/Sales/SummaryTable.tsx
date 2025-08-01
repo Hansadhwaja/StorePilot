@@ -4,54 +4,45 @@ import {
   TableRow,
   TableHead,
   TableBody,
-  TableCell,
 } from "@/components/ui/table";
 import DaySalesGroup from "./DaySalesGroup";
 import { SalesProps } from "@/types";
 
-interface Props {
-  salesSummary: SalesProps[];
-  grandTotals: {
-    totalItems: number;
-    totalRevenue: number;
-    totalProfit: number;
-  };
-}
-
-export default function SummaryTable({ salesSummary, grandTotals }: Props) {
+export default function SummaryTable({ sales }: { sales: SalesProps[] }) {
+  if (sales.length === 0)
+    return (
+      <h1 className="flex justify-center mt-10 text-gray-500">
+        No sales for this month.
+      </h1>
+    );
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Date</TableHead>
-          <TableHead>Product</TableHead>
-          <TableHead>Qty</TableHead>
-          <TableHead>Selling Price</TableHead>
-          <TableHead>Cost Price</TableHead>
-          <TableHead>Profit</TableHead>
-          <TableHead>Action</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {salesSummary.map((day, i) => (
-          <DaySalesGroup
-            key={day.date}
-            date={day.date}
-            sales={day.sales}
-            totalItems={day.totalItems}
-            totalRevenue={day.totalRevenue}
-            totalProfit={day.totalProfit}
-            initiallyOpen={i === 0}
-          />
-        ))}
-        <TableRow className="font-bold bg-muted">
-          <TableCell colSpan={2}>Grand Total</TableCell>
-          <TableCell>{grandTotals.totalItems}</TableCell>
-          <TableCell>₹{grandTotals.totalRevenue.toFixed(2)}</TableCell>
-          <TableCell></TableCell>
-          <TableCell>₹{grandTotals.totalProfit.toFixed(2)}</TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+    <div className="w-full overflow-x-auto border rounded-md h-[75%]">
+      <Table>
+        <TableHeader className="bg-muted-foreground/30">
+          <TableRow>
+            <TableHead>Date</TableHead>
+            <TableHead>Product</TableHead>
+            <TableHead>Qty</TableHead>
+            <TableHead>Selling Price</TableHead>
+            <TableHead>Cost Price</TableHead>
+            <TableHead>Profit</TableHead>
+            <TableHead>Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sales.map((day, i) => (
+            <DaySalesGroup
+              key={day.date}
+              date={day.date}
+              sales={day.sales}
+              totalItems={day.totalItems}
+              totalRevenue={day.totalRevenue}
+              totalProfit={day.totalProfit}
+              initiallyOpen={i === 0}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

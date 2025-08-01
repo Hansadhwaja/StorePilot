@@ -29,9 +29,9 @@ export default async function ProductTable() {
   );
 
   return (
-    <div className="w-full overflow-x-auto border rounded-md">
+    <div className="w-full overflow-x-auto border rounded-md h-[85%]">
       <Table className="min-w-[900px] text-sm">
-        <TableHeader className="sticky top-0 bg-muted z-10">
+        <TableHeader className="bg-muted">
           <TableRow>
             <TableHead className="p-2 text-left">Name</TableHead>
             <TableHead className="p-2 text-left">Unit</TableHead>

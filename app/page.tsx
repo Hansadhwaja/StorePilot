@@ -1,10 +1,35 @@
-import { Button } from "@/components/ui/button";
+import { SalesHeader } from "@/components/Sales/SalesHeader";
+import SalesStatsCards from "@/components/Sales/SalesStatsCards";
+import { getSalesSummaryByMonth } from "@/lib/actions/saleActions";
 
-export default function Home() {
+interface HomePageProps {
+  searchParams?: {
+    month?: string;
+  };
+}
+
+export default async function Home({ searchParams }: HomePageProps) {
+  const currentDate = new Date();
+  const params=await searchParams;
+  const selectedMonthIndex = params?.month
+    ? parseInt(params.month)
+    : currentDate.getMonth();
+
+  const selectedMonthStr = `${currentDate.getFullYear()}-${String(
+    selectedMonthIndex + 1
+  ).padStart(2, "0")}`;
+
+  const salesSummary = await getSalesSummaryByMonth(selectedMonthStr);
+  const { totalProfit, totalRevenue, totalItems } = salesSummary;
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <h1 className="text-3xl font-bold text-red-400">StorePilot</h1>
-      <Button>Hello</Button>
+    <div className="p-4 min-h-screen">
+      <SalesHeader selectedMonth={selectedMonthIndex} />
+      <SalesStatsCards
+        totalItems={totalItems}
+        totalRevenue={totalRevenue}
+        totalProfit={totalProfit}
+      />
     </div>
   );
 }

@@ -39,8 +39,10 @@ export async function addSale({
   }
 }
 
-export async function getSalesSummaryByDate() {
+export async function getSalesSummaryByMonth(month?: string) {
   await connectToDatabase();
+
+  const targetMonth = month || new Date().toISOString().slice(0, 7);
 
   const sales = await Sale.aggregate([
     {
@@ -53,6 +55,99 @@ export async function getSalesSummaryByDate() {
     },
     { $unwind: "$productInfo" },
     {
+      $addFields: {
+        saleMonth: { $dateToString: { format: "%Y-%m", date: "$saleDate" } },
+      },
+    },
+    {
+      $match: {
+        saleMonth: targetMonth,
+      },
+    },
+    {
+      $group: {
+        _id: "$saleMonth",
+        sales: {
+          $push: {
+            _id: { $toString: "$_id" },
+            productId: { $toString: "$product" },
+            saleDate: {
+              $dateToString: {
+                format: "%Y-%m-%dT%H:%M:%S.%LZ",
+                date: "$saleDate",
+              },
+            },
+            productName: "$productInfo.name",
+            quantity: "$quantity",
+            sellingPrice: "$sellingPrice",
+            costPrice: "$costPrice",
+            profit: "$profit",
+          },
+        },
+        totalRevenue: { $sum: { $multiply: ["$quantity", "$sellingPrice"] } },
+        totalProfit: { $sum: "$profit" },
+        totalItems: { $sum: "$quantity" },
+        saleCount: { $sum: 1 },
+      },
+    },
+    { $sort: { "_id": -1 } },
+  ]);
+
+  const summary = sales[0];
+
+  if (!summary) {
+    return {
+      month: targetMonth,
+      sales: [],
+      totalRevenue: 0,
+      totalProfit: 0,
+      totalItems: 0,
+      saleCount: 0,
+    };
+  }
+
+  return {
+    month: summary._id,
+    sales: summary.sales,
+    totalRevenue: summary.totalRevenue,
+    totalProfit: summary.totalProfit,
+    totalItems: summary.totalItems,
+    saleCount: summary.saleCount,
+  };
+}
+
+export async function getSalesSummaryByDate(month?: string) {
+  await connectToDatabase();
+
+  const now = new Date();
+  const defaultMonth = now.toISOString().slice(0, 7);
+  const targetMonth = month || defaultMonth;
+
+  const sales = await Sale.aggregate([
+    {
+      $lookup: {
+        from: "products",
+        localField: "product",
+        foreignField: "_id",
+        as: "productInfo",
+      },
+    },
+    { $unwind: "$productInfo" },
+
+    // Add saleMonth for filtering
+    {
+      $addFields: {
+        saleMonth: { $dateToString: { format: "%Y-%m", date: "$saleDate" } },
+      },
+    },
+    {
+      $match: {
+        saleMonth: targetMonth,
+      },
+    },
+
+    // Group by date (YYYY-MM-DD)
+    {
       $group: {
         _id: {
           date: { $dateToString: { format: "%Y-%m-%d", date: "$saleDate" } },
@@ -61,7 +156,12 @@ export async function getSalesSummaryByDate() {
           $push: {
             _id: { $toString: "$_id" },
             productId: { $toString: "$product" },
-            saleDate: { $dateToString: { format: "%Y-%m-%dT%H:%M:%S.%LZ", date: "$saleDate" } },
+            saleDate: {
+              $dateToString: {
+                format: "%Y-%m-%dT%H:%M:%S.%LZ",
+                date: "$saleDate",
+              },
+            },
             productName: "$productInfo.name",
             quantity: "$quantity",
             sellingPrice: "$sellingPrice",
@@ -87,6 +187,7 @@ export async function getSalesSummaryByDate() {
     saleCount: s.saleCount,
   }));
 }
+
 
 export async function updateSale(
   id: string,

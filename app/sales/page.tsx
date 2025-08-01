@@ -1,27 +1,32 @@
 import { getSalesSummaryByDate } from "@/lib/actions/saleActions";
 import SummaryTable from "@/components/Sales/SummaryTable";
 import AddSaleForm from "@/components/Sales/AddSaleForm";
+import { SalesHeader } from "@/components/Sales/SalesHeader";
 
-export default async function SalesPage() {
-  const salesSummary = await getSalesSummaryByDate();
+interface SalesPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-  const grandTotals = salesSummary.reduce(
-    (acc, day) => {
-      acc.totalItems += day.totalItems;
-      acc.totalRevenue += day.totalRevenue;
-      acc.totalProfit += day.totalProfit ?? 0;
-      return acc;
-    },
-    { totalItems: 0, totalRevenue: 0, totalProfit: 0 }
-  );
+export default async function SalesPage({ searchParams }: SalesPageProps) {
+  const current = new Date();
+  const params = await searchParams;
+  const selectedMonth =
+    typeof params.month === "string" ? parseInt(params.month) : current.getMonth();
+  const selectedYear = current.getFullYear();
+
+  const formattedMonth = `${selectedYear}-${String(selectedMonth + 1).padStart(
+    2,
+    "0"
+  )}`;
+  const salesSummary = await getSalesSummaryByDate(formattedMonth);
 
   return (
-    <div className="p-4">
+    <div className="p-4 h-full">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Sales by Day</h1>
+        <SalesHeader selectedMonth={selectedMonth} />
         <AddSaleForm />
       </div>
-      <SummaryTable salesSummary={salesSummary} grandTotals={grandTotals} />
+      <SummaryTable sales={salesSummary} />
     </div>
   );
 }
