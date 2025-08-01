@@ -9,15 +9,19 @@ interface SalesPageProps {
 
 export default async function SalesPage({ searchParams }: SalesPageProps) {
   const current = new Date();
-  const params = await searchParams;
+
   const selectedMonth =
-    typeof params.month === "string" ? parseInt(params.month) : current.getMonth();
+    typeof searchParams.month === "string"
+      ? parseInt(searchParams.month)
+      : current.getMonth();
+
   const selectedYear = current.getFullYear();
 
   const formattedMonth = `${selectedYear}-${String(selectedMonth + 1).padStart(
     2,
     "0"
   )}`;
+
   const salesSummary = await getSalesSummaryByDate(formattedMonth);
 
   return (

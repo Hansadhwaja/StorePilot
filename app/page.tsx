@@ -10,10 +10,9 @@ interface HomePageProps {
 
 export default async function Home({ searchParams }: HomePageProps) {
   const currentDate = new Date();
-  const params=await searchParams;
-  const selectedMonthIndex = params?.month
-    ? parseInt(params.month)
-    : currentDate.getMonth();
+const selectedMonthIndex = searchParams?.month
+  ? parseInt(searchParams.month)
+  : currentDate.getMonth();
 
   const selectedMonthStr = `${currentDate.getFullYear()}-${String(
     selectedMonthIndex + 1
@@ -23,7 +22,7 @@ export default async function Home({ searchParams }: HomePageProps) {
   const { totalProfit, totalRevenue, totalItems } = salesSummary;
 
   return (
-    <div className="p-4 min-h-screen">
+    <div className="p-4 min-h-screen flex flex-col gap-4">
       <SalesHeader selectedMonth={selectedMonthIndex} />
       <SalesStatsCards
         totalItems={totalItems}
