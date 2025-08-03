@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import {
   Select,
@@ -12,8 +11,18 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 export function SalesHeader({ selectedMonth }: { selectedMonth: number }) {
@@ -36,10 +45,10 @@ export function SalesHeader({ selectedMonth }: { selectedMonth: number }) {
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <span className="text-2xl font-semibold">Sales in Month of</span>
+      <div className="flex items-center sm:gap-2">
+        <span className="sm:text-2xl font-semibold">Sales in Month of</span>
         <Select value={month} onValueChange={handleChange}>
-          <SelectTrigger className="w-[150px] text-xl font-semibold border-none">
+          <SelectTrigger className="w-[150px] sm:text-xl font-semibold border-none">
             <SelectValue placeholder="Select month" />
           </SelectTrigger>
           <SelectContent>

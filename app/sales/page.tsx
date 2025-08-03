@@ -25,7 +25,7 @@ export default async function SalesPage({
 
   return (
     <div className="p-4 h-full">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 gap-2">
         <SalesHeader selectedMonth={selectedMonth} />
         <AddSaleForm />
       </div>

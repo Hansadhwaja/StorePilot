@@ -18,7 +18,7 @@ export default function AddSaleForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>+ Add Sale</Button>
+        <Button size="sm" className="text-sm">+ Add Sale</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
