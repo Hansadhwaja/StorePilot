@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import ProductForm, { ProductFormValues } from "./ProductForm";
+import ProductForm from "./ProductForm";
 import { addProduct } from "@/lib/actions/productActions";
 import { toast } from "sonner";
 import { useState } from "react";
+import { ProductFormValues } from "@/schemas";
 
 const AddProduct = () => {
   const [open, setOpen] = useState(false);

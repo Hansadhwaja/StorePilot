@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -14,23 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Loader from "../Loader";
-
-const productSchema = z.object({
-  name: z.string().min(1, "Product name is required"),
-  category: z.string().optional(),
-  unit: z.string().min(1, "Unit is required"),
-  sellingPrice: z.coerce
-    .number({ invalid_type_error: "Selling Price is required" })
-    .nonnegative(),
-  costPrice: z.coerce
-    .number({ invalid_type_error: "Cost Price is required" })
-    .nonnegative(),
-  stockQty: z.coerce
-    .number({ invalid_type_error: "Stock Quantity is required" })
-    .nonnegative(),
-});
-
-export type ProductFormValues = z.infer<typeof productSchema>;
+import { ProductFormValues, productSchema } from "@/schemas";
 
 interface ProductFormProps {
   onSubmit: (values: ProductFormValues) => void;

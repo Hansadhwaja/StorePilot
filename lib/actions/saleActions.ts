@@ -1,7 +1,7 @@
 'use server';
 
 import connectToDatabase from "@/lib/db";
-import { Sale } from "../models/Sale";
+import Sale from "../models/Sale";
 import { revalidatePath } from "next/cache";
 import mongoose from "mongoose";
 
@@ -42,77 +42,34 @@ export async function addSale({
 export async function getSalesSummaryByMonth(month?: string) {
   await connectToDatabase();
 
-  const targetMonth = month || new Date().toISOString().slice(0, 7);
+  const monthFilter = month || new Date().toISOString().slice(0, 7); // "YYYY-MM"
+  const [yearStr, monthStr] = monthFilter.split("-");
+  const year = parseInt(yearStr);
+  const monthNum = parseInt(monthStr);
 
-  const sales = await Sale.aggregate([
-    {
-      $lookup: {
-        from: "products",
-        localField: "product",
-        foreignField: "_id",
-        as: "productInfo",
-      },
-    },
-    { $unwind: "$productInfo" },
-    {
-      $addFields: {
-        saleMonth: { $dateToString: { format: "%Y-%m", date: "$saleDate" } },
-      },
-    },
+  const summary = await Sale.aggregate([
     {
       $match: {
-        saleMonth: targetMonth,
+        $expr: {
+          $and: [
+            { $eq: [{ $year: "$saleDate" }, year] },
+            { $eq: [{ $month: "$saleDate" }, monthNum] },
+          ],
+        },
       },
     },
     {
       $group: {
-        _id: "$saleMonth",
-        sales: {
-          $push: {
-            _id: { $toString: "$_id" },
-            productId: { $toString: "$product" },
-            saleDate: {
-              $dateToString: {
-                format: "%Y-%m-%dT%H:%M:%S.%LZ",
-                date: "$saleDate",
-              },
-            },
-            productName: "$productInfo.name",
-            quantity: "$quantity",
-            sellingPrice: "$sellingPrice",
-            costPrice: "$costPrice",
-            profit: "$profit",
-          },
-        },
+        _id: null,
         totalRevenue: { $sum: { $multiply: ["$quantity", "$sellingPrice"] } },
         totalProfit: { $sum: "$profit" },
-        totalItems: { $sum: "$quantity" },
-        saleCount: { $sum: 1 },
       },
     },
-    { $sort: { "_id": -1 } },
   ]);
 
-  const summary = sales[0];
-
-  if (!summary) {
-    return {
-      month: targetMonth,
-      sales: [],
-      totalRevenue: 0,
-      totalProfit: 0,
-      totalItems: 0,
-      saleCount: 0,
-    };
-  }
-
   return {
-    month: summary._id,
-    sales: summary.sales,
-    totalRevenue: summary.totalRevenue,
-    totalProfit: summary.totalProfit,
-    totalItems: summary.totalItems,
-    saleCount: summary.saleCount,
+    totalRevenue: summary[0]?.totalRevenue || 0,
+    totalProfit: summary[0]?.totalProfit || 0,
   };
 }
 
@@ -187,7 +144,6 @@ export async function getSalesSummaryByDate(month?: string) {
     saleCount: s.saleCount,
   }));
 }
-
 
 export async function updateSale(
   id: string,

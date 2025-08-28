@@ -11,25 +11,9 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { ProductData } from "@/app/api/products/route";
+import { ProductData, SaleFormProps } from "@/types";
 
-type SaleFormProps = {
-  initialData?: {
-    productId: string;
-    quantity: number;
-    sellingPrice: number;
-    costPrice?: number;
-    saleDate: string;
-  };
-  onSubmit: (data: {
-    productId: string;
-    quantity: number;
-    sellingPrice: number;
-    costPrice?: number;
-    saleDate: string;
-  }) => Promise<void>;
-  submitLabel?: string;
-};
+
 
 export default function SaleForm({
   initialData,

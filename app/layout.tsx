@@ -1,10 +1,15 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import { Toaster } from "@/components/ui/sonner";
+import { Poppins } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import LeftBar from "@/components/LeftBar";
+import { Navbar } from "@/components/Navbar";
+import BottomBar from "@/components/BottomBar";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "StorePilot",
@@ -17,13 +22,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={` w-full justify-center flex-center ${inter.className}`}
+        className={`w-full justify-center flex-center ${poppins.className}`}
       >
-        <Navbar />
-        <main className="px-4 w-full">{children}</main>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="min-h-screen flex bg-background text-foreground">
+            <LeftBar />
+            <div className="flex flex-col max-container">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+            </div>
+            <BottomBar />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

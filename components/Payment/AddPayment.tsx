@@ -10,7 +10,6 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import PaymentForm from "./PaymentForm";
-import { Plus } from "lucide-react";
 
 interface AddPaymentProps {
   dealerId: string;
@@ -22,9 +21,8 @@ const AddPayment = ({ dealerId }: AddPaymentProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus />
-          Add Payment
+        <Button className="text-xs md:text-sm">
+          + Add Payment
         </Button>
       </DialogTrigger>
       <DialogContent>

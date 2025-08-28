@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { DealerProps } from "@/types";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import BadgeStatus from "../BadgeStatus";
 import AddPayment from "../Payment/AddPayment";
+import { Button } from "../ui/button";
 
 const DealerCard = (dealer: DealerProps) => {
   const {
@@ -18,53 +19,55 @@ const DealerCard = (dealer: DealerProps) => {
     due,
     status,
   } = dealer;
+
   return (
     <Card
       key={_id}
-      className="shadow-md hover:shadow-lg transition-all rounded-2xl border border-muted bg-white"
+      className="shadow-sm hover:shadow-lg transition-all rounded-2xl border border-muted bg-card"
     >
-      <CardHeader className="pb-2 border-b">
-        <div className="flex flex-col items-start justify-between">
-          <div className="flex gap-4">
-            <CardTitle className="text-xl font-semibold text-gray-800">
-              {name}
-            </CardTitle>
-            <Link
-              href={`/dealers/${_id}`}
-              className="text-xs font-medium text-blue-600 hover:underline flex items-center gap-1"
-            >
-              View Details <ArrowRight className="w-4 h-4" />
-            </Link>
+      <CardHeader className="pb-3 border-b">
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle className="text-lg font-semibold">{name}</CardTitle>
+            <p className="text-sm text-muted-foreground truncate max-w-[180px]">
+              {address || "No address provided"}
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground">{address || "N/A"}</p>
+          <Link
+            href={`/dealers/${_id}`}
+            className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+          >
+            View <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
-
-        <BadgeStatus status={status} />
+        <div className="mt-2">
+          <BadgeStatus status={status} />
+        </div>
       </CardHeader>
 
-      <CardContent className="pt-4 space-y-4 text-sm text-gray-700">
+      <CardContent className="pt-4 space-y-5 text-sm">
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-muted-foreground">📞 Phone</p>
-            <p>{phone || "-"}</p>
+          <div className="flex items-center gap-2">
+            <Phone className="w-4 h-4 text-muted-foreground" />
+            <span className="truncate">{phone || "-"}</span>
           </div>
-          <div>
-            <p className="text-muted-foreground">✉️ Email</p>
-            <p>{email || "-"}</p>
+          <div className="flex items-center gap-2">
+            <Mail className="w-4 h-4 text-muted-foreground" />
+            <span className="truncate">{email || "-"}</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div>
-            <p className="text-muted-foreground">Total Purchased</p>
+            <p className="text-xs text-muted-foreground">Total Purchased</p>
             <p className="font-medium">₹{totalPurchased}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">Total Paid</p>
+            <p className="text-xs text-muted-foreground">Total Paid</p>
             <p className="font-medium">₹{totalPaid}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               {due < 0 ? "Credit Balance" : "Due"}
             </p>
             <p
@@ -74,7 +77,7 @@ const DealerCard = (dealer: DealerProps) => {
                   ? "text-green-600"
                   : due > 0
                   ? "text-red-600"
-                  : "text-gray-600"
+                  : "text-gray-500"
               )}
             >
               ₹{Math.abs(due)}
@@ -82,8 +85,20 @@ const DealerCard = (dealer: DealerProps) => {
           </div>
         </div>
 
-        <div className="flex gap-1 sm:gap-2 justify-between pt-2">
-          <AddPayment dealerId={_id.toString()} />
+        <div className="flex justify-between items-center gap-2 flex-wrap">
+          <div className="flex-1 min-w-[120px]">
+            <AddPayment dealerId={_id.toString()} />
+          </div>
+          <div className="flex-1 min-w-[120px]">
+            <Link href={`/dealers/${_id}/purchases/new`}>
+              <Button
+                variant={"secondary"}
+                className="text-xs md:text-sm w-full"
+              >
+                + Add Purchase
+              </Button>
+            </Link>
+          </div>
         </div>
       </CardContent>
     </Card>

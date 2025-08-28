@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import SaleForm from "./SaleForm";
 import { addSale } from "@/lib/actions/saleActions";
+import { Plus } from "lucide-react";
 
 export default function AddSaleForm() {
   const [open, setOpen] = useState(false);
@@ -18,7 +19,10 @@ export default function AddSaleForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="text-sm">+ Add Sale</Button>
+        <Button size="sm" className="text-sm">
+          <Plus />
+          <span className="text-xs"> Add Sale</span>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

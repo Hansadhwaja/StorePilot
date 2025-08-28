@@ -16,7 +16,7 @@ export default function SummaryTable({ sales }: { sales: SalesProps[] }) {
       </h1>
     );
   return (
-    <div className="w-full overflow-x-auto border rounded-md h-[75%]">
+    <div className="w-full overflow-x-auto border rounded-md h-[75%] mb-18">
       <Table>
         <TableHeader className="bg-muted-foreground/30">
           <TableRow>

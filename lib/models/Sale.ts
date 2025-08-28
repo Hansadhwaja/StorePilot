@@ -36,7 +36,7 @@ const saleSchema = new Schema<ISale>({
     }
 });
 
-export const Sale = models.Sale || model<ISale>('Sale', saleSchema);
+const Sale = models.Sale || model<ISale>('Sale', saleSchema);
 
-
+export default Sale;
 

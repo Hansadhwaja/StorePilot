@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import DealerForm, { DealerFormValues } from "./DealerForm";
 import { addDealer } from "@/lib/actions/dealerActions";
+import { Plus } from "lucide-react";
 
 const AddDealer = () => {
   const [open, setOpen] = useState(false);
@@ -38,7 +39,8 @@ const AddDealer = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="default" className="cursor-pointer">
-          + Add Dealer
+          <Plus />
+          <span className="text-xs">Add Dealer</span>
         </Button>
       </DialogTrigger>
 

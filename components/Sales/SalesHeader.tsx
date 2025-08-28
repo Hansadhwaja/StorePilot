@@ -45,10 +45,10 @@ export function SalesHeader({ selectedMonth }: { selectedMonth: number }) {
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center sm:gap-2">
-        <span className="sm:text-2xl font-semibold">Sales in Month of</span>
+      <div className="flex items-center gap-2">
+        <span className="text-lg md:text-xl lg:text-2xl font-semibold">Sales in Month of</span>
         <Select value={month} onValueChange={handleChange}>
-          <SelectTrigger className="w-[150px] sm:text-xl font-semibold border-none">
+          <SelectTrigger className="max-w-[150px] sm:text-xl font-semibold border-none">
             <SelectValue placeholder="Select month" />
           </SelectTrigger>
           <SelectContent>

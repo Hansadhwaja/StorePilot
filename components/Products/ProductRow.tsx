@@ -32,7 +32,7 @@ export default function ProductRow({
   };
 
   return (
-    <TableRow className="border-t hover:bg-gray-50">
+    <TableRow className="border-t hover:bg-gray-50 dark:hover:bg-zinc-800">
       <TableCell className="p-2">{product.name}</TableCell>
       <TableCell className="p-2">{product.unit}</TableCell>
       <TableCell className="p-2">₹{product.sellingPrice.toFixed(2)}/-</TableCell>

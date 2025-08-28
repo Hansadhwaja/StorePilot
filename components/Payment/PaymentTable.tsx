@@ -11,29 +11,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Payment } from "@/types";
-import { deletePayment } from "@/lib/actions/paymentActions";
-import { toast } from "sonner";
-import EditPayment from "./EditPayment";
-import ActionButton from "../ActionButton";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
-export default function PaymentTable({ payments }: { payments: Payment[] }) {
-  const handleDelete = async (id: string) => {
-    try {
-      await deletePayment(id);
-      toast.success("Payment deleted successfully.");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to delete Payment.");
-      throw new Error("Error Deleting Payment.");
-    }
-  };
-
-  if (!payments.length) {
-    return <p className="text-muted-foreground">No payments found.</p>;
-  }
-
+export default function PaymentTable({
+  payments,
+  dealerId,
+}: {
+  payments: Payment[];
+  dealerId: string;
+}) {
   return (
-    <div className="rounded-xl border">
+    <div className="rounded-xl border p-2">
       <Table>
         <TableHeader>
           <TableRow>
@@ -43,34 +32,48 @@ export default function PaymentTable({ payments }: { payments: Payment[] }) {
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {payments.map((payment) => (
-            <TableRow key={payment._id}>
-              <TableCell>
-                {format(new Date(payment.paidAt), "dd MMM yyyy")}
-              </TableCell>
-              <TableCell className="font-medium text-green-600">
-                ₹{payment.amount}
-              </TableCell>
+          {payments.length > 0 ? (
+            payments.map((payment) => (
+              <TableRow key={payment._id}>
+                <TableCell>
+                  {format(new Date(payment.paidAt), "dd MMM yyyy")}
+                </TableCell>
+
+                <TableCell className="font-semibold text-green-600">
+                  ₹{payment.amount.toFixed(2)}
+                </TableCell>
+
+                <TableCell
+                  className={cn(
+                    "text-muted-foreground",
+                    !payment.note && "italic"
+                  )}
+                >
+                  {payment.note || "—"}
+                </TableCell>
+
+                <TableCell className="text-right space-x-2">
+                  <Link
+                    href={`/dealers/${dealerId}/payments/${payment._id}`}
+                    className="text-sm font-medium text-blue-600 hover:underline flex items-center justify-end gap-1"
+                  >
+                    View <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
               <TableCell
-                className={cn(
-                  "text-muted-foreground",
-                  !payment.note && "italic"
-                )}
+                colSpan={5}
+                className="p-4 text-center text-muted-foreground"
               >
-                {payment.note || "—"}
-              </TableCell>
-              <TableCell className="text-right space-x-2">
-                <ActionButton
-                  editComponent={<EditPayment {...payment} />}
-                  onDelete={() => handleDelete(payment._id)}
-                  deleteLabel="Remove Payment"
-                  deleteConfirmTitle="Delete Payment?"
-                  deleteConfirmDescription="This payment will be permanently deleted."
-                />
+                No payments found
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>
