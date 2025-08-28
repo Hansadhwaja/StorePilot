@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import Loader from "../Loader";
 import { ProductFormValues, productSchema } from "@/schemas";
 
-interface ProductFormProps {
+export interface ProductFormProps {
   onSubmit: (values: ProductFormValues) => void;
   defaultValues?: Partial<ProductFormValues>;
   submitLabel?: string;

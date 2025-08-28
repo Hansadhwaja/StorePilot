@@ -9,11 +9,12 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import ProductForm, { ProductFormValues } from "./ProductForm";
+import ProductForm  from "./ProductForm";
 import { updateProduct } from "@/lib/actions/productActions";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Edit2 } from "lucide-react";
+import { ProductFormValues } from "@/schemas";
 
 interface EditProductDialogProps {
   id: string;
