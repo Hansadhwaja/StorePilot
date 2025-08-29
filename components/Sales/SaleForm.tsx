@@ -11,16 +11,14 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { ProductData, SaleFormProps } from "@/types";
-
-
+import { GroupedProduct, ProductData, SaleFormProps } from "@/types";
 
 export default function SaleForm({
   initialData,
   onSubmit,
   submitLabel = "Submit",
 }: SaleFormProps) {
-  const [products, setProducts] = useState<ProductData[]>([]);
+  const [items, setItems] = useState<GroupedProduct[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
     null
   );
@@ -34,16 +32,18 @@ export default function SaleForm({
   useEffect(() => {
     fetch("/api/products")
       .then((res) => res.json())
-      .then(setProducts)
+      .then(setItems)
       .catch((err) => console.error("Failed to load products", err));
   }, []);
 
   useEffect(() => {
-    if (initialData && products.length > 0) {
-      const prod = products.find((p) => p._id === initialData.productId);
+    if (initialData && items.length > 0) {
+      const prod = items
+        .flatMap((group) => group.products)
+        .find((p) => p?._id === initialData.productId);
       if (prod) setSelectedProduct(prod);
     }
-  }, [initialData, products]);
+  }, [initialData, items]);
 
   useEffect(() => {
     if (selectedProduct) {
@@ -83,6 +83,7 @@ export default function SaleForm({
       );
     });
   };
+  console.log("products", items);
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
@@ -91,7 +92,9 @@ export default function SaleForm({
         <Select
           value={selectedProduct?._id}
           onValueChange={(val) => {
-            const product = products.find((p) => p._id === val);
+            const product = items
+              .flatMap((group) => group.products)
+              .find((p: ProductData) => p._id === val);
             setSelectedProduct(product || null);
           }}
         >
@@ -99,33 +102,18 @@ export default function SaleForm({
             <SelectValue placeholder="Select a product" />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(
-              products.reduce((acc, product) => {
-                const category = product.category || "Others";
-                if (!acc[category]) acc[category] = [];
-                acc[category].push(product);
-                return acc;
-              }, {} as Record<string, ProductData[]>)
-            )
-              .sort(([a], [b]) => a.localeCompare(b))
-              .map(([category, products]) => {
-                const sortedProducts = [...products].sort((a, b) =>
-                  a.name.localeCompare(b.name)
-                );
-
-                return (
-                  <React.Fragment key={category}>
-                    <div className="px-2 py-1 text-muted-foreground text-xs uppercase tracking-wide">
-                      {category}
-                    </div>
-                    {sortedProducts.map((product) => (
-                      <SelectItem key={product._id} value={product._id}>
-                        {product.name}
-                      </SelectItem>
-                    ))}
-                  </React.Fragment>
-                );
-              })}
+            {items.map((item) => (
+              <React.Fragment key={item.category}>
+                <div className="px-2 py-1 text-muted-foreground text-xs uppercase tracking-wide">
+                  {item.category}
+                </div>
+                {item.products.map((product) => (
+                  <SelectItem key={product._id} value={product._id}>
+                    {product.name}
+                  </SelectItem>
+                ))}
+              </React.Fragment>
+            ))}
           </SelectContent>
         </Select>
       </div>
