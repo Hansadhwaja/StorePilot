@@ -44,7 +44,9 @@ const DashBoard = () => {
           </div>
         </>
       ) : (
-        <Loader />
+        <div className="flex justify-center h-32">
+          <Loader />
+        </div>
       )}
     </div>
   );

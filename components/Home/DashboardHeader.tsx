@@ -1,6 +1,12 @@
 "use client";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DashboardHeaderProps {
   month: string;
@@ -8,7 +14,11 @@ interface DashboardHeaderProps {
   monthNames: string[];
 }
 
-const DashboardHeader = ({ month, setMonth, monthNames }: DashboardHeaderProps) => {
+const DashboardHeader = ({
+  month,
+  setMonth,
+  monthNames,
+}: DashboardHeaderProps) => {
   const year = month.split("-")[0];
 
   return (
@@ -16,13 +26,17 @@ const DashboardHeader = ({ month, setMonth, monthNames }: DashboardHeaderProps) 
       <h2 className="text-2xl font-bold">Dashboard</h2>
 
       <Select value={month} onValueChange={setMonth}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger>
           <SelectValue placeholder="Select Month" />
         </SelectTrigger>
         <SelectContent>
           {monthNames.map((name, idx) => {
-            const value = `${year}-${String(idx+1).padStart(2,"0")}`;
-            return <SelectItem key={value} value={value}>{name} {year}</SelectItem>;
+            const value = `${year}-${String(idx + 1).padStart(2, "0")}`;
+            return (
+              <SelectItem key={value} value={value}>
+                {name} {year}
+              </SelectItem>
+            );
           })}
         </SelectContent>
       </Select>

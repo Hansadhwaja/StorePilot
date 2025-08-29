@@ -7,31 +7,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
+import { generateMonthYearOptions } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-export function SalesHeader({ selectedMonth }: { selectedMonth: number }) {
-  const [month, setMonth] = useState(selectedMonth.toString());
+export function SalesHeader({ selectedMonth }: { selectedMonth: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [month, setMonth] = useState(selectedMonth);
+
+  const startDate = new Date(2025, 6, 1);
+  const endDate = new Date();
+  const monthYearOptions = generateMonthYearOptions(startDate, endDate);
 
   useEffect(() => {
-    setMonth(selectedMonth.toString());
+    setMonth(selectedMonth);
   }, [selectedMonth]);
 
   function handleChange(val: string) {
@@ -44,22 +34,22 @@ export function SalesHeader({ selectedMonth }: { selectedMonth: number }) {
   }
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <span className="text-lg md:text-xl lg:text-2xl font-semibold">Sales in Month of</span>
-        <Select value={month} onValueChange={handleChange}>
-          <SelectTrigger className="max-w-[150px] sm:text-xl font-semibold border-none">
-            <SelectValue placeholder="Select month" />
-          </SelectTrigger>
-          <SelectContent>
-            {monthNames.map((name, index) => (
-              <SelectItem key={index} value={index.toString()}>
-                {name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="flex items-center gap-2">
+      <span className="text-lg md:text-xl lg:text-2xl font-semibold">
+        Sales in
+      </span>
+      <Select value={month} onValueChange={handleChange}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select month" />
+        </SelectTrigger>
+        <SelectContent>
+          {monthYearOptions.map(({ label, value }) => (
+            <SelectItem key={value} value={value}>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }
